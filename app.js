@@ -2,16 +2,25 @@ import express from 'express';
 import chalk from 'chalk';
 import debug from 'debug';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT;
 
 app.use(morgan('combined'))
+app.use(express.static(path.join(__dirname, '/public/')));
+
+app.set("views", "./src/views/");
+app.set("view engine", "ejs");
 
 app.get('/', (req, res) => {
-    res.send('Hello World! This is my first Express app.');
+    res.render('index', {username: 'Ankit', customers: ['Homa', 'john', 'Doe']});
 })
 
-app.listen(port, ()=>{
-    debug('Server is running on port: ' + chalk.green(port));
+app.listen(PORT, ()=>{
+    debug('Server is running on port: ' + chalk.green(PORT));
 })
